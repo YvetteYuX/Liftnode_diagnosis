@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h> 
 
 // Define sensor data struct
 typedef struct {
@@ -222,17 +223,40 @@ char* check_outlier(SensorData sensor_data, SensorMetrics metrics) {
 
 
 char* check_missing(SensorData sensor_data, SensorMetrics metrics) {
-    // int missing_count = 0;
-    // int threshold_missing_data = 5;  // Example threshold for missing data points
-
     // Calculate the expected number of data points
     int expected_data_points = sensor_data.sampling_frequency * sensor_data.duration;
 
-    // Check if the actual data size is less than expected
-    if (metrics.acceleration_size < expected_data_points) {
+    // Check if no data was collected (hard failure)
+    if (metrics.acceleration_size == 0) {
+        return "Hard failure detected due to no data collection";
+    }
+
+    // Check if all collected data points are the same (hard failure)
+    bool all_same_value = true;
+    for (int i = 1; i < metrics.acceleration_size; i++) {
+        if (sensor_data.acceleration[i] != sensor_data.acceleration[0]) {
+            all_same_value = false;
+            break;
+        }
+    }
+    if (all_same_value) {
+        return "Hard failure detected due to all data points having the same value";
+    }
+
+    // Check if the actual data size is less than expected (missing data)
+    if (metrics.acceleration_size > 0 && metrics.acceleration_size < expected_data_points) {
         return "Missing data detected due to insufficient sample points";
     }
-    return "No missing data detected";
+
+    // Check if the actual data size equals the expected data points (no missing data)
+    if (metrics.acceleration_size == expected_data_points) {
+        return "No missing data detected";
+    }
+
+    // return "Error: Unexpected condition";
+
+
+    
 
     // // Check for missing data points (represented as zeros or unusual constant values)
     // for (int i = 0; i < sensor_data.size; i++) {
