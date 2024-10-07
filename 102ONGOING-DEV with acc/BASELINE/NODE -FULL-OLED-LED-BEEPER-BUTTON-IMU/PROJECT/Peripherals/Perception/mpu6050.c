@@ -93,10 +93,10 @@ uint8_t MPU6050_Init(I2C_HandleTypeDef *I2Cx)
         Data = 0x07;
         HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDR, SMPLRT_DIV_REG, 1, &Data, 1, i2c_timeout);
 
-        // Set accelerometer configuration in ACCEL_CONFIG Register
-        // XA_ST=0,YA_ST=0,ZA_ST=0, FS_SEL=0 (0X00) -> +/- 2g; FS_SEL=1 (0X08) -> +/- 4g; FS_SEL=2 (0X10) -> +/- 8g; FS_SEL=3 (0X18) -> +/- 16g
-        Data = 0x00;
-        HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDR, ACCEL_CONFIG_REG, 1, &Data, 1, i2c_timeout);
+//        // Set accelerometer configuration in ACCEL_CONFIG Register
+//        // XA_ST=0,YA_ST=0,ZA_ST=0, FS_SEL=0 (0X00) -> +/- 2g; FS_SEL=1 (0X08) -> +/- 4g; FS_SEL=2 (0X10) -> +/- 8g; FS_SEL=3 (0X18) -> +/- 16g
+//        Data = 0x00;
+//        HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDR, ACCEL_CONFIG_REG, 1, &Data, 1, i2c_timeout);
 
         // Set Gyroscopic configuration in GYRO_CONFIG Register
         // XG_ST=0,YG_ST=0,ZG_ST=0, FS_SEL=0 -> � 250 �/s
@@ -105,6 +105,14 @@ uint8_t MPU6050_Init(I2C_HandleTypeDef *I2Cx)
         return 0;
     }
     return 1;
+}
+
+//Dynamically Adjust range of mpu6050
+AccelRange current_accel_range = ACCEL_RANGE_2G;
+void adjust_accel_range(I2C_HandleTypeDef *I2Cx, AccelRange new_range) {
+    uint8_t Data = new_range;
+    HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDR, ACCEL_CONFIG_REG, 1, &Data, 1, i2c_timeout);
+    current_accel_range = new_range;
 }
 
 void MPU6050_Read_Accel(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct)

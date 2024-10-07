@@ -46,6 +46,16 @@ typedef struct
     double P[2][2];
 } Kalman_t;
 
+//define accel range config
+typedef enum {
+    ACCEL_RANGE_2G = 0x00,
+    ACCEL_RANGE_4G = 0x08,
+    ACCEL_RANGE_8G = 0x10,
+    ACCEL_RANGE_16G = 0x18
+} AccelRange;
+
+extern uint8_t current_accel_range;
+
 // char array for acc_x, acc_y, acc_z
 extern char acc_x_str[13];
 extern char acc_y_str[13];
@@ -67,5 +77,7 @@ void MPU6050_Read_Temp(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
 void MPU6050_Read_All(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
 
 double Kalman_getAngle(Kalman_t *Kalman, double newAngle, double newRate, double dt);
+
+void adjust_accel_range(I2C_HandleTypeDef *I2Cx, AccelRange new_range);
 
 #endif /* _INC_GY521_H_ */

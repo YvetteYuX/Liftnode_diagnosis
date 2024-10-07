@@ -14,6 +14,7 @@
 #include "app_control.h"
 #include "setup.h"
 #include <stdio.h>
+#include "mpu6050.h"
 
 /**
  * @name MACROS
@@ -128,7 +129,10 @@ char* check_trend(SensorData sensor_data, SensorMetrics metrics) {
     return "No Trend detected";
 }
 
-char* check_minor(SensorData sensor_data, SensorMetrics metrics) {
+
+
+// Check Minor
+char* check_minor(SensorData sensor_data, SensorMetrics metrics) { 
     int minor_count = 0;
 
     // Calculate the percentage of samples within the resolution range
@@ -140,47 +144,93 @@ char* check_minor(SensorData sensor_data, SensorMetrics metrics) {
 
     // Check if 80% of samples are within the resolution range
     if ((minor_count / (float)(metrics.acceleration_size - 1)) >= 0.8) {
+        // increase range, reduce resolution
+        if (current_accel_range < ACCEL_RANGE_16G) {
+            adjust_accel_range(&hi2c2, current_accel_range + 0x08);
+        }
         return "Minor issue detected due to insufficient sensor resolution";
     }
     return "No minor issues detected";
 }
+//char* check_minor(SensorData sensor_data, SensorMetrics metrics) {
+//    int minor_count = 0;
+
+//    // Calculate the percentage of samples within the resolution range
+//    for (int i = 1; i < metrics.acceleration_size; i++) {
+//        if (fabs(sensor_data.acceleration[i] - sensor_data.acceleration[i - 1]) <= metrics.resolution) {
+//            minor_count++;
+//        }
+//    }
+
+//    // Check if 80% of samples are within the resolution range
+//    if ((minor_count / (float)(metrics.acceleration_size - 1)) >= 0.8) {
+//        return "Minor issue detected due to insufficient sensor resolution";
+//    }
+//    return "No minor issues detected";
+//}
 
 char* check_square(SensorData sensor_data, SensorMetrics metrics) {
-    float high_threshold = metrics.range/2;   // Maximum sensor range
-    float low_threshold = - metrics.range/2;   // Minimum sensor range
+    float high_threshold = current_accel_range/2;   // Maximum sensor range
+    float low_threshold = - current_accel_range/2;   // Minimum sensor range
     float tolerance = 0.5;        // Allowable offset for near saturation
     int near_max_count = 0;       // Counter for consecutive near-max values
     int near_min_count = 0;       // Counter for consecutive near-min values
-
-    // Loop through the acceleration data
+	
     for (int i = 0; i < metrics.acceleration_size; i++) {
-        // Check if the value is near the maximum threshold
-        if (sensor_data.acceleration[i] >= high_threshold - tolerance && sensor_data.acceleration[i] <= high_threshold + tolerance) {
-            near_max_count++;  // Increment near max counter
-            near_min_count = 0; // Reset min counter if max is detected
-        }
-        // Check if the value is near the minimum threshold
-        else if (sensor_data.acceleration[i] >= low_threshold - tolerance && sensor_data.acceleration[i] <= low_threshold + tolerance) {
-            near_min_count++;  // Increment near min counter
-            near_max_count = 0; // Reset max counter if min is detected
-        }
-        // Reset counters if neither max nor min threshold is hit
-        else {
+        if (sensor_data.acceleration[i] >= high_threshold - tolerance &&
+            sensor_data.acceleration[i] <= high_threshold + tolerance) {
+            near_max_count++;
+            near_min_count = 0;
+        } else if (sensor_data.acceleration[i] >= low_threshold - tolerance &&
+                   sensor_data.acceleration[i] <= low_threshold + tolerance) {
+            near_min_count++;
+            near_max_count = 0;
+        } else {
             near_max_count = 0;
             near_min_count = 0;
         }
 
-        // Check if near saturation values appear 3 times consecutively
-        if (near_max_count >= 3) {
-            return "Square issue detected due to sensor saturation at maximum";
-        }
-        if (near_min_count >= 3) {
-            return "Square issue detected due to sensor saturation at minimum";
+        if (near_max_count >= 3 || near_min_count >= 3) {
+            //Reduce range level
+            if (current_accel_range > ACCEL_RANGE_2G) {
+                adjust_accel_range(&hi2c2, current_accel_range - 0x08);
+            }
+            return "Square issue detected due to sensor saturation";
         }
     }
 
     return "No Square issues detected";
 }
+
+//    // Loop through the acceleration data
+//    for (int i = 0; i < metrics.acceleration_size; i++) {
+//        // Check if the value is near the maximum threshold
+//        if (sensor_data.acceleration[i] >= high_threshold - tolerance && sensor_data.acceleration[i] <= high_threshold + tolerance) {
+//            near_max_count++;  // Increment near max counter
+//            near_min_count = 0; // Reset min counter if max is detected
+//        }
+//        // Check if the value is near the minimum threshold
+//        else if (sensor_data.acceleration[i] >= low_threshold - tolerance && sensor_data.acceleration[i] <= low_threshold + tolerance) {
+//            near_min_count++;  // Increment near min counter
+//            near_max_count = 0; // Reset max counter if min is detected
+//        }
+//        // Reset counters if neither max nor min threshold is hit
+//        else {
+//            near_max_count = 0;
+//            near_min_count = 0;
+//        }
+
+//        // Check if near saturation values appear 3 times consecutively
+//        if (near_max_count >= 3) {
+//            return "Square issue detected due to sensosenr saturation at maximum";
+//        }
+//        if (near_min_count >= 3) {
+//            return "Square issue detected due to sensor saturation at minimum";
+//        }
+//    }
+
+//    return "No Square issues detected";
+//}
 
 char* check_bias(SensorData sensor_data, SensorMetrics metrics) {
     float noise_tolerance = 0.1;
