@@ -57,4 +57,5 @@ project/app_control.o: ..\APP\app_control.c ..\APP\app_control.h \
   ..\Drivers\CMSIS\DSP\Include\arm_math.h \
   ..\Drivers\CMSIS\Include\cmsis_compiler.h \
   E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\string.h \
-  E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\float.h ..\APP\diagnosis.h
+  E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\float.h ..\APP\diagnosis.h \
+  E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\stdbool.h

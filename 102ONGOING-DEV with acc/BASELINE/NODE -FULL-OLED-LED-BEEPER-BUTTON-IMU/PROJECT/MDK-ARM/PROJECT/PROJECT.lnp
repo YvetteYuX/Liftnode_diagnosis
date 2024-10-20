@@ -99,6 +99,7 @@
 "project\stm32h7xx_hal_msp.o"
 "project\app_control.o"
 "project\diagnosis.o"
+"project\recovery.o"
 "project\sensing.o"
 "project\filesystem.o"
 --library_type=microlib --strict --scatter "PROJECT\PROJECT.sct"

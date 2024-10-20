@@ -14,6 +14,7 @@
  *
  */
 #include "app_control.h"
+#include <stdbool.h> 
 
 
 
@@ -29,17 +30,15 @@
  *
  */
 
+
+// define sensor data struct
 typedef struct {
-    float *battery_voltage;
-    float *temperature;
-    float *acceleration;
+    float battery_voltage[5];
+    float temperature[5];
+    float acceleration[5];
+	  float gyroscope[5];
     char previous_data[10];
-    // int size;  // Size of data arrays
-    int sampling_frequency;     // Sampling frequency of the sensor data
-    int duration;               // Duration of the data collection in seconds
-    int acceleration_size;
-    int battery_size;
-    int temperature_size;
+	  bool is_active;
 } SensorData;
 
 // Define calculated metrics struct
@@ -54,11 +53,22 @@ typedef struct {
     float min_accel;
     float avg_accel;
     float resolution;
+	  float resolution_noise;
     float range; // Range total
     int battery_size;
     int temperature_size;
     int acceleration_size;
+	  int gyroscope_size;
 } SensorMetrics;
+
+//// define trend state
+//typedef enum {
+//    NO_TREND,
+//    TEMPERATURE_TREND,
+//    ACTIVATION_TREND
+//} TrendState;
+
+//TrendState current_trend_state = NO_TREND;
 
 //typedef struct {
 //    float battery_voltage[5];
@@ -83,7 +93,10 @@ char* check_bias(SensorData sensor_data, SensorMetrics metrics);
 char* check_sudden_rotation(SensorData sensor_data, SensorMetrics metrics);
 char* check_outlier(SensorData sensor_data, SensorMetrics metrics);
 char* check_missing(SensorData sensor_data, SensorMetrics metrics);
+
+
 void diagnose(SensorData sensor_data, SensorMetrics metrics, int choice);
+
 	
 //char* check_drift(SensorData sensor_data);
 //char* check_trend(SensorData sensor_data);

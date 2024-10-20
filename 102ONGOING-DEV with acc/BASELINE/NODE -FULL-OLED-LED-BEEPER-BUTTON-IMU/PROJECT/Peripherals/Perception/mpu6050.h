@@ -54,6 +54,17 @@ typedef enum {
     ACCEL_RANGE_16G = 0x18
 } AccelRange;
 
+//static float get_threshold(AccelRange range) {
+//    switch (range) {
+//        case ACCEL_RANGE_2G: return 2.0f;
+//        case ACCEL_RANGE_4G: return 4.0f;
+//        case ACCEL_RANGE_8G: return 8.0f;
+//        case ACCEL_RANGE_16G: return 16.0f;
+//        default: return 2.0f; // Default to 2g in case of an error
+//    }
+//}
+
+
 extern uint8_t current_accel_range;
 
 // char array for acc_x, acc_y, acc_z

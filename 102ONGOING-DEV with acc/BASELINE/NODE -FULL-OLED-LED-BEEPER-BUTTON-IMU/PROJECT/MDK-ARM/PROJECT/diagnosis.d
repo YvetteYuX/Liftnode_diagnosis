@@ -58,13 +58,13 @@ project/diagnosis.o: ..\APP\diagnosis.c ..\APP\diagnosis.h \
   ..\Drivers\CMSIS\DSP\Include\arm_math.h \
   ..\Drivers\CMSIS\Include\cmsis_compiler.h \
   E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\string.h \
-  E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\float.h ..\Setup\setup.h \
+  E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\float.h \
+  E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\stdbool.h ..\APP\recovery.h \
+  ..\Peripherals\Perception\mpu6050.h ..\Core\Inc\i2c.h ..\Setup\setup.h \
   ..\BSP\bsp_led.h ..\BSP\bsp_usart.h \
-  E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\stdarg.h \
-  E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\stdbool.h ..\BSP\bsp_sdram.h \
+  E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\stdarg.h ..\BSP\bsp_sdram.h \
   ..\BSP\bsp_memory.h ..\BSP\bsp_usart.h ..\BSP\bsp_sdram.h \
-  ..\BSP\bsp_file.h ..\Peripherals\Perception\mpu6050.h \
-  ..\Core\Inc\i2c.h ..\Drivers\CMSIS\DSP\Include\arm_const_structs.h \
+  ..\BSP\bsp_file.h ..\Drivers\CMSIS\DSP\Include\arm_const_structs.h \
   ..\Drivers\CMSIS\DSP\Include\arm_math.h \
   ..\Drivers\CMSIS\DSP\Include\arm_common_tables.h \
   ..\Drivers\CMSIS\DSP\Include\arm_common_tables.h \

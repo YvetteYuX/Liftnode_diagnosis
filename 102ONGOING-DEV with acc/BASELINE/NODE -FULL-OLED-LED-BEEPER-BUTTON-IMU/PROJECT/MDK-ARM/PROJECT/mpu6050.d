@@ -1,5 +1,6 @@
 project/mpu6050.o: ..\Peripherals\Perception\mpu6050.c \
   E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\math.h \
+  E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\stdio.h \
   ..\Peripherals\Perception\mpu6050.h \
   E:\Keil5_MDK\ARM\ARMCLANG\Bin\..\include\stdint.h ..\Core\Inc\i2c.h \
   ..\Core\Inc\main.h ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal.h \

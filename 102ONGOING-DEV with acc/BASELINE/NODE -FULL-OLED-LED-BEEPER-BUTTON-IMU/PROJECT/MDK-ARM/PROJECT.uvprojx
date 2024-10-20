@@ -1620,6 +1620,16 @@
               <FileType>5</FileType>
               <FilePath>..\APP\diagnosis.h</FilePath>
             </File>
+            <File>
+              <FileName>recovery.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\recovery.c</FilePath>
+            </File>
+            <File>
+              <FileName>recovery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\APP\recovery.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

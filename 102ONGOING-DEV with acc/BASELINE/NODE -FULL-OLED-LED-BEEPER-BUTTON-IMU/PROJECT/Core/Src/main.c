@@ -126,25 +126,25 @@ int main(void)
   Node_Init();
   // Record_Sensing();
   // LED_RGB(0,1,0);
-	char ch;
-  printf("Please input a character: \n\r");
+//	char ch;
+//  printf("Please input a character: \n\r");
 
-  // use while to wait for the input
-  scanf("%c", &ch);
+//  // use while to wait for the input
+//  scanf("%c", &ch);
 
-  printf("The character you input is: %c\n\r", ch);
+//  printf("The character you input is: %c\n\r", ch);
 	
 	// Sample sensor data
-    SensorData sensor_data;
-    // sensor_data.size = 5; // Example size
-    sensor_data.sampling_frequency = 1;  // Example frequency: 1 Hz (1 sample per second)
-    sensor_data.duration = 5;  // Example duration: 10 seconds
-    
-
-    // Input sensor data
-    sensor_data.battery_voltage = (float[]) {3.75, 3.50, 3.50, 3.85, 3.50};
-    sensor_data.temperature = (float[]) {22.5, 23.0, 21.5, 24.0, 22.0};
-    sensor_data.acceleration = (float[]) {0.0, 1.0, -1.0, 0.5};
+	  SensorData sensor_data = {
+        {3.5, 3.4, 3.5, 3.4, 3.5},  // battery_voltage
+        {21, 21, 22, 23, 26},       // temperature
+        {-0.3, 0.3, -0.1, 0.2, -0.3},  // acceleration
+				{200, 200, 200, 200, 200},  // gyroscope
+        "variable",                  // previous_data
+				false
+		};
+    SensorMetrics metrics = calculate_metrics(sensor_data);
+    printf("%d\n", metrics.acceleration_size);
 
     int choice;
     printf("Please select the fault type:\n");
@@ -157,11 +157,39 @@ int main(void)
     printf("6: Drift\n");
     printf("Enter your choice: ");
     scanf("%d", &choice);
-		
-		SensorMetrics metrics; // state metrics
 
-    // Run the diagnostic function
     diagnose(sensor_data, metrics, choice);
+		
+		
+//    SensorData sensor_data;
+//    // sensor_data.size = 5; // Example size
+//    sensor_data.sampling_frequency = 1;  // Example frequency: 1 Hz (1 sample per second)
+//    sensor_data.duration = 5;  // Example duration: 10 seconds
+//    
+
+//    // Input sensor data
+//    sensor_data.battery_voltage = (float[]) {3.75, 3.50, 3.50, 3.85, 3.50};
+//    sensor_data.temperature = (float[]) {22.5, 23.0, 21.5, 24.0, 22.0};
+//    sensor_data.acceleration = (float[]) {0.0, 4.0, 4.0, 4.0};
+//		
+//		printf("%d\n", current_accel_range);
+
+//    int choice;
+//    printf("Please select the fault type:\n");
+//    printf("0: Normal\n");
+//    printf("1: Missing\n");
+//    printf("2: Minor\n");
+//    printf("3: Outlier\n");
+//    printf("4: Square\n");
+//    printf("5: Trend\n");
+//    printf("6: Drift\n");
+//    printf("Enter your choice: ");
+//    scanf("%d", &choice);
+//		
+//		SensorMetrics metrics; // state metrics
+
+//    // Run the diagnostic function
+//    diagnose(sensor_data, metrics, choice);
 
     // // Free allocated memory
     // free(sensor_data.battery_voltage);
