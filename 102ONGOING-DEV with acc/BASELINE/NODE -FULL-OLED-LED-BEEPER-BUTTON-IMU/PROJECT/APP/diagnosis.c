@@ -1,4 +1,4 @@
-/**
+        /**
  * @file diagnosis.c
  * @brief This script is to perform wavelet transform on the generated signal.
  * @version 1.0
@@ -97,7 +97,7 @@ SensorMetrics calculate_metrics(SensorData sensor_data) {
     metrics.avg_accel = total_accel / metrics.acceleration_size;
 
     // Calculate resolution and range
-    metrics.range = 12.0;  // ±6g gives a total range of 12g
+    metrics.range = 12.0;  // ï¿½6g gives a total range of 12g
     metrics.resolution = metrics.range / (1 << 12);  // Example for a 12-bit sensor
 
     return metrics;
@@ -170,8 +170,8 @@ char* check_minor(SensorData sensor_data, SensorMetrics metrics) {
 //}
 
 char* check_square(SensorData sensor_data, SensorMetrics metrics) {
-    float high_threshold = current_accel_range/2;   // Maximum sensor range
-    float low_threshold = - current_accel_range/2;   // Minimum sensor range
+    float high_threshold = current_accel_range;   // Maximum sensor range
+    float low_threshold = - current_accel_range;   // Minimum sensor range
     float tolerance = 0.5;        // Allowable offset for near saturation
     int near_max_count = 0;       // Counter for consecutive near-max values
     int near_min_count = 0;       // Counter for consecutive near-min values
