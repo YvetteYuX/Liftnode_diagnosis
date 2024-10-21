@@ -409,7 +409,30 @@ char* check_missing(SensorData sensor_data, SensorMetrics metrics) {
     }
 }
 
-char* check_and_recover_bias(SensorData sensor_data, SensorMetrics metrics) {
+// Function to correct bias in acceleration data
+void correct_bias(float* acceleration, int acceleration_size, float* smoothed_accel, int bias_index, int max_derivative_index, int window_size) {
+      // This calculates the bias index
+
+    float mean_before_bias = 0.0;
+    int count_before = 0;
+
+    // Step 1: Calculate mean of data before the bias
+    for (int i = 0; i < bias_index; i++) {
+        mean_before_bias += acceleration[i];
+        count_before++;
+    }
+    if (count_before > 0) {
+        mean_before_bias /= count_before;
+    }
+
+    // Step 2: Bias correction by shifting post-bias data to align with pre-bias mean
+    for (int i = bias_index; i < acceleration_size; i++) {
+        acceleration[i] -= (smoothed_accel[max_derivative_index] - mean_before_bias);
+    }
+}
+
+
+char* check_bias(SensorData sensor_data, SensorMetrics metrics) {
     float derivative_threshold = 0.5;  // Define a threshold for the derivative
     int max_derivative_index = 0;
     float max_derivative = 0.0;
@@ -443,30 +466,32 @@ char* check_and_recover_bias(SensorData sensor_data, SensorMetrics metrics) {
         }
     }
 
-    for (int i = 0; i < metrics.gyroscope_size; i++) {
-        if (fabs(sensor_data.gyroscope[i]) > GYRO_THRESHOLD) {
-            // Bias detected due to sudden rotation, now apply data recovery
-            int bias_index = max_derivative_index * WINDOW_SIZE;
-
-            // Split the data into two segments: before and after the bias
-            float* before_bias = &sensor_data.acceleration[0];
-            int before_size = bias_index;
-            float* after_bias = &sensor_data.acceleration[bias_index];
-            int after_size = metrics.acceleration_size - bias_index;
-
-            // Apply trend recovery separately on both segments
-            trend_recovery(before_bias, before_size, WINDOW_SIZE);
-            trend_recovery(after_bias, after_size, WINDOW_SIZE);
-
-            return "Bias detected due to sudden rotation and recovered!";
-        }
-    }
-    //     // Check for bias due to sudden rotation using gyroscope data
     // for (int i = 0; i < metrics.gyroscope_size; i++) {
     //     if (fabs(sensor_data.gyroscope[i]) > GYRO_THRESHOLD) {
-    //         return "Bias detected due to sudden rotation";
+    //         // Bias detected due to sudden rotation, now apply data recovery
+    //         int bias_index = max_derivative_index * WINDOW_SIZE;
+
+    //         // Split the data into two segments: before and after the bias
+    //         float* before_bias = &sensor_data.acceleration[0];
+    //         int before_size = bias_index;
+    //         float* after_bias = &sensor_data.acceleration[bias_index];
+    //         int after_size = metrics.acceleration_size - bias_index;
+
+    //         // Apply trend recovery separately on both segments
+    //         trend_recovery(before_bias, before_size, WINDOW_SIZE);
+    //         trend_recovery(after_bias, after_size, WINDOW_SIZE);
+
+    //         return "Bias detected due to sudden rotation and recovered!";
     //     }
     // }
+        // Check for bias due to sudden rotation using gyroscope data
+    for (int i = 0; i < metrics.gyroscope_size; i++) {
+        if (fabs(sensor_data.gyroscope[i]) > GYRO_THRESHOLD) {
+            int bias_index = max_derivative_index * WINDOW_SIZE;
+            correct_bias(sensor_data.acceleration, metrics.acceleration_size, smoothed_accel, bias_index, max_derivative_index, WINDOW_SIZE);
+            return "Bias detected due to sudden rotation and recovery applied";
+        }
+    }
 
     return "No bias detected";
 }

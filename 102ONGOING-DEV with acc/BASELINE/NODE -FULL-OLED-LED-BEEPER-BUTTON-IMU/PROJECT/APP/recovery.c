@@ -99,4 +99,26 @@ void outlier_recovery(float* data, int size) {
     }
 }
 
+void correct_bias(float* acceleration, int acceleration_size, float* smoothed_accel, int bias_index, int max_derivative_index, int window_size) {
+      // This calculates the bias index
+
+    float mean_before_bias = 0.0;
+    int count_before = 0;
+
+    // Step 1: Calculate mean of data before the bias
+    for (int i = 0; i < bias_index; i++) {
+        mean_before_bias += acceleration[i];
+        count_before++;
+    }
+    if (count_before > 0) {
+        mean_before_bias /= count_before;
+    }
+
+    // Step 2: Bias correction by shifting post-bias data to align with pre-bias mean
+    for (int i = bias_index; i < acceleration_size; i++) {
+        acceleration[i] -= (smoothed_accel[max_derivative_index] - mean_before_bias);
+    }
+}
+
+
 

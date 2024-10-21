@@ -3733,9 +3733,9 @@ Section Cross References
     diagnosis.o(.text.check_square) refers to diagnosis.o(.rodata.str1.1) for [Anonymous Symbol]
     diagnosis.o(.text.check_square) refers to i2c.o(.bss.hi2c2) for hi2c2
     diagnosis.o(.ARM.exidx.text.check_square) refers to diagnosis.o(.text.check_square) for [Anonymous Symbol]
-    diagnosis.o(.text.check_and_recover_bias) refers to recovery.o(.text.trend_recovery) for trend_recovery
-    diagnosis.o(.text.check_and_recover_bias) refers to diagnosis.o(.rodata.str1.1) for [Anonymous Symbol]
-    diagnosis.o(.ARM.exidx.text.check_and_recover_bias) refers to diagnosis.o(.text.check_and_recover_bias) for [Anonymous Symbol]
+    diagnosis.o(.text.check_bias) refers to recovery.o(.text.correct_bias) for correct_bias
+    diagnosis.o(.text.check_bias) refers to diagnosis.o(.rodata.str1.1) for [Anonymous Symbol]
+    diagnosis.o(.ARM.exidx.text.check_bias) refers to diagnosis.o(.text.check_bias) for [Anonymous Symbol]
     diagnosis.o(.text.check_outlier) refers to diagnosis.o(.text.OUTLINED_FUNCTION_5) for OUTLINED_FUNCTION_5
     diagnosis.o(.text.check_outlier) refers to recovery.o(.text.trend_recovery) for trend_recovery
     diagnosis.o(.text.check_outlier) refers to recovery.o(.text.outlier_recovery) for outlier_recovery
@@ -3772,6 +3772,7 @@ Section Cross References
     recovery.o(.text.outlier_recovery) refers to printfa.o(i.__0printf) for __2printf
     recovery.o(.text.outlier_recovery) refers to sqrtf.o(i.__hardfp_sqrtf) for __hardfp_sqrtf
     recovery.o(.ARM.exidx.text.outlier_recovery) refers to recovery.o(.text.outlier_recovery) for [Anonymous Symbol]
+    recovery.o(.ARM.exidx.text.correct_bias) refers to recovery.o(.text.correct_bias) for [Anonymous Symbol]
     recovery.o(.ARM.exidx.text.OUTLINED_FUNCTION_0) refers to recovery.o(.text.OUTLINED_FUNCTION_0) for [Anonymous Symbol]
     sensing.o(.text.MPU6050_Gravity_Projection) refers to printfa.o(i.__0printf) for __2printf
     sensing.o(.text.MPU6050_Gravity_Projection) refers to mpu6050.o(.text.MPU6050_Read_Accel) for MPU6050_Read_Accel
@@ -6532,8 +6533,8 @@ Removing Unused input sections from the image.
     Removing diagnosis.o(.ARM.exidx.text.get_threshold), (8 bytes).
     Removing diagnosis.o(.ARM.exidx.text.check_minor), (8 bytes).
     Removing diagnosis.o(.ARM.exidx.text.check_square), (8 bytes).
-    Removing diagnosis.o(.text.check_and_recover_bias), (404 bytes).
-    Removing diagnosis.o(.ARM.exidx.text.check_and_recover_bias), (8 bytes).
+    Removing diagnosis.o(.text.check_bias), (412 bytes).
+    Removing diagnosis.o(.ARM.exidx.text.check_bias), (8 bytes).
     Removing diagnosis.o(.ARM.exidx.text.check_outlier), (8 bytes).
     Removing diagnosis.o(.ARM.exidx.text.check_missing), (8 bytes).
     Removing diagnosis.o(.ARM.exidx.text.diagnose), (8 bytes).
@@ -6548,6 +6549,8 @@ Removing Unused input sections from the image.
     Removing recovery.o(.ARM.exidx.text.moving_average_filter), (8 bytes).
     Removing recovery.o(.ARM.exidx.text.trend_recovery), (8 bytes).
     Removing recovery.o(.ARM.exidx.text.outlier_recovery), (8 bytes).
+    Removing recovery.o(.text.correct_bias), (92 bytes).
+    Removing recovery.o(.ARM.exidx.text.correct_bias), (8 bytes).
     Removing recovery.o(.ARM.exidx.text.OUTLINED_FUNCTION_0), (8 bytes).
     Removing sensing.o(.text), (0 bytes).
     Removing sensing.o(.ARM.exidx.text.MPU6050_Gravity_Projection), (8 bytes).
@@ -6574,7 +6577,7 @@ Removing Unused input sections from the image.
     Removing arm_std_f32.o(.text), (0 bytes).
     Removing arm_std_f32.o(.ARM.exidx.text.arm_std_f32), (8 bytes).
 
-2305 unused section(s) (total 91883 bytes) removed from the image.
+2307 unused section(s) (total 91991 bytes) removed from the image.
 
 ==============================================================================
 
@@ -8743,48 +8746,48 @@ Memory Map of the image
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x08000000   0x08000000   0x00000298   Data   RO         3175    RESET               startup_stm32h743xx.o
-    0x08000298   0x08000298   0x00000000   Code   RO         3559  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
-    0x08000298   0x08000298   0x00000004   Code   RO         3908    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
-    0x0800029c   0x0800029c   0x00000004   Code   RO         3911    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
-    0x080002a0   0x080002a0   0x00000000   Code   RO         3913    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
-    0x080002a0   0x080002a0   0x00000000   Code   RO         3915    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
-    0x080002a0   0x080002a0   0x00000008   Code   RO         3916    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
-    0x080002a8   0x080002a8   0x00000000   Code   RO         3918    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
-    0x080002a8   0x080002a8   0x00000000   Code   RO         3920    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
-    0x080002a8   0x080002a8   0x00000004   Code   RO         3909    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x08000298   0x08000298   0x00000000   Code   RO         3561  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x08000298   0x08000298   0x00000004   Code   RO         3910    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x0800029c   0x0800029c   0x00000004   Code   RO         3913    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x080002a0   0x080002a0   0x00000000   Code   RO         3915    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x080002a0   0x080002a0   0x00000000   Code   RO         3917    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
+    0x080002a0   0x080002a0   0x00000008   Code   RO         3918    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
+    0x080002a8   0x080002a8   0x00000000   Code   RO         3920    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
+    0x080002a8   0x080002a8   0x00000000   Code   RO         3922    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
+    0x080002a8   0x080002a8   0x00000004   Code   RO         3911    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
     0x080002ac   0x080002ac   0x00000024   Code   RO         3176    .text               startup_stm32h743xx.o
-    0x080002d0   0x080002d0   0x00000062   Code   RO         3566    .text               mc_w.l(uldiv.o)
-    0x08000332   0x08000332   0x00000040   Code   RO         3572    .text               mc_w.l(memmovea.o)
-    0x08000372   0x08000372   0x00000024   Code   RO         3574    .text               mc_w.l(memseta.o)
-    0x08000396   0x08000396   0x00000024   Code   RO         3576    .text               mc_w.l(strstr.o)
+    0x080002d0   0x080002d0   0x00000062   Code   RO         3568    .text               mc_w.l(uldiv.o)
+    0x08000332   0x08000332   0x00000040   Code   RO         3574    .text               mc_w.l(memmovea.o)
+    0x08000372   0x08000372   0x00000024   Code   RO         3576    .text               mc_w.l(memseta.o)
+    0x08000396   0x08000396   0x00000024   Code   RO         3578    .text               mc_w.l(strstr.o)
     0x080003ba   0x080003ba   0x00000002   PAD
-    0x080003bc   0x080003bc   0x00000020   Code   RO         3877    .text               mc_w.l(__0scanf.o)
-    0x080003dc   0x080003dc   0x0000014c   Code   RO         3879    .text               mc_w.l(_scanf_int.o)
-    0x08000528   0x08000528   0x0000001a   Code   RO         3881    .text               mc_w.l(atoi.o)
-    0x08000542   0x08000542   0x0000002c   Code   RO         3933    .text               mc_w.l(uidiv.o)
-    0x0800056e   0x0800056e   0x0000001e   Code   RO         3935    .text               mc_w.l(llshl.o)
-    0x0800058c   0x0800058c   0x00000020   Code   RO         3937    .text               mc_w.l(llushr.o)
-    0x080005ac   0x080005ac   0x0000001c   Code   RO         3948    .text               mc_w.l(_chval.o)
-    0x080005c8   0x080005c8   0x00000070   Code   RO         3950    .text               mc_w.l(strtol.o)
-    0x08000638   0x08000638   0x00000014   Code   RO         3952    .text               mc_w.l(scanf_char_file.o)
-    0x0800064c   0x0800064c   0x00000000   Code   RO         3954    .text               mc_w.l(iusefp.o)
-    0x0800064c   0x0800064c   0x0000014e   Code   RO         3955    .text               mf_w.l(dadd.o)
-    0x0800079a   0x0800079a   0x000000e4   Code   RO         3957    .text               mf_w.l(dmul.o)
-    0x0800087e   0x0800087e   0x000000de   Code   RO         3959    .text               mf_w.l(ddiv.o)
-    0x0800095c   0x0800095c   0x00000030   Code   RO         3961    .text               mf_w.l(dfixul.o)
-    0x0800098c   0x0800098c   0x00000030   Code   RO         3963    .text               mf_w.l(cdrcmple.o)
-    0x080009bc   0x080009bc   0x00000024   Code   RO         3965    .text               mc_w.l(init.o)
-    0x080009e0   0x080009e0   0x0000002c   Code   RO         3967    .text               mc_w.l(fgetc_b.o)
-    0x08000a0c   0x08000a0c   0x00000024   Code   RO         3970    .text               mc_w.l(llsshr.o)
-    0x08000a30   0x08000a30   0x00000008   Code   RO         3972    .text               mc_w.l(ctype_o.o)
-    0x08000a38   0x08000a38   0x00000012   Code   RO         3994    .text               mc_w.l(isspace_o.o)
+    0x080003bc   0x080003bc   0x00000020   Code   RO         3879    .text               mc_w.l(__0scanf.o)
+    0x080003dc   0x080003dc   0x0000014c   Code   RO         3881    .text               mc_w.l(_scanf_int.o)
+    0x08000528   0x08000528   0x0000001a   Code   RO         3883    .text               mc_w.l(atoi.o)
+    0x08000542   0x08000542   0x0000002c   Code   RO         3935    .text               mc_w.l(uidiv.o)
+    0x0800056e   0x0800056e   0x0000001e   Code   RO         3937    .text               mc_w.l(llshl.o)
+    0x0800058c   0x0800058c   0x00000020   Code   RO         3939    .text               mc_w.l(llushr.o)
+    0x080005ac   0x080005ac   0x0000001c   Code   RO         3950    .text               mc_w.l(_chval.o)
+    0x080005c8   0x080005c8   0x00000070   Code   RO         3952    .text               mc_w.l(strtol.o)
+    0x08000638   0x08000638   0x00000014   Code   RO         3954    .text               mc_w.l(scanf_char_file.o)
+    0x0800064c   0x0800064c   0x00000000   Code   RO         3956    .text               mc_w.l(iusefp.o)
+    0x0800064c   0x0800064c   0x0000014e   Code   RO         3957    .text               mf_w.l(dadd.o)
+    0x0800079a   0x0800079a   0x000000e4   Code   RO         3959    .text               mf_w.l(dmul.o)
+    0x0800087e   0x0800087e   0x000000de   Code   RO         3961    .text               mf_w.l(ddiv.o)
+    0x0800095c   0x0800095c   0x00000030   Code   RO         3963    .text               mf_w.l(dfixul.o)
+    0x0800098c   0x0800098c   0x00000030   Code   RO         3965    .text               mf_w.l(cdrcmple.o)
+    0x080009bc   0x080009bc   0x00000024   Code   RO         3967    .text               mc_w.l(init.o)
+    0x080009e0   0x080009e0   0x0000002c   Code   RO         3969    .text               mc_w.l(fgetc_b.o)
+    0x08000a0c   0x08000a0c   0x00000024   Code   RO         3972    .text               mc_w.l(llsshr.o)
+    0x08000a30   0x08000a30   0x00000008   Code   RO         3974    .text               mc_w.l(ctype_o.o)
+    0x08000a38   0x08000a38   0x00000012   Code   RO         3996    .text               mc_w.l(isspace_o.o)
     0x08000a4a   0x08000a4a   0x00000002   PAD
-    0x08000a4c   0x08000a4c   0x00000028   Code   RO         4000    .text               mc_w.l(scanf_char.o)
-    0x08000a74   0x08000a74   0x0000009e   Code   RO         4002    .text               mc_w.l(_strtoul.o)
-    0x08000b12   0x08000b12   0x000000ba   Code   RO         4004    .text               mf_w.l(depilogue.o)
-    0x08000bcc   0x08000bcc   0x00000000   Code   RO         4006    .text               mc_w.l(semi.o)
-    0x08000bcc   0x08000bcc   0x0000032c   Code   RO         4009    .text               mc_w.l(_scanf.o)
-    0x08000ef8   0x08000ef8   0x00000000   Code   RO         4011    .text               mc_w.l(iusesemig.o)
+    0x08000a4c   0x08000a4c   0x00000028   Code   RO         4002    .text               mc_w.l(scanf_char.o)
+    0x08000a74   0x08000a74   0x0000009e   Code   RO         4004    .text               mc_w.l(_strtoul.o)
+    0x08000b12   0x08000b12   0x000000ba   Code   RO         4006    .text               mf_w.l(depilogue.o)
+    0x08000bcc   0x08000bcc   0x00000000   Code   RO         4008    .text               mc_w.l(semi.o)
+    0x08000bcc   0x08000bcc   0x0000032c   Code   RO         4011    .text               mc_w.l(_scanf.o)
+    0x08000ef8   0x08000ef8   0x00000000   Code   RO         4013    .text               mc_w.l(iusesemig.o)
     0x08000ef8   0x08000ef8   0x00000008   Code   RO         3107    .text.BSP_SD_GetCardInfo  bsp_driver_sd.o
     0x08000f00   0x08000f00   0x00000010   Code   RO         3105    .text.BSP_SD_GetCardState  bsp_driver_sd.o
     0x08000f10   0x08000f10   0x0000002c   Code   RO         3089    .text.BSP_SD_Init   bsp_driver_sd.o
@@ -8813,7 +8816,7 @@ Memory Map of the image
     0x080014f0   0x080014f0   0x00000026   Code   RO         1199    .text.FMC_SDRAM_SendCommand  stm32h7xx_ll_fmc.o
     0x08001516   0x08001516   0x00000002   PAD
     0x08001518   0x08001518   0x000000b0   Code   RO         1191    .text.FMC_SDRAM_Timing_Init  stm32h7xx_ll_fmc.o
-    0x080015c8   0x080015c8   0x000001dc   Code   RO         3495    .text.FS_Check      filesystem.o
+    0x080015c8   0x080015c8   0x000001dc   Code   RO         3497    .text.FS_Check      filesystem.o
     0x080017a4   0x080017a4   0x000000c0   Code   RO         2345    .text.FatFs_DeleteFile  bsp_file.o
     0x08001864   0x08001864   0x00000138   Code   RO         2333    .text.FatFs_GetDiskInfo  bsp_file.o
     0x0800199c   0x0800199c   0x000000ec   Code   RO         2341    .text.FatFs_GetFileInfo  bsp_file.o
@@ -8929,11 +8932,11 @@ Memory Map of the image
     0x0800670a   0x0800670a   0x00000002   PAD
     0x0800670c   0x0800670c   0x00000010   Code   RO         2251    .text.LED           bsp_led.o
     0x0800671c   0x0800671c   0x0000004c   Code   RO         2506    .text.LED_RGB       led_rgb.o
-    0x08006768   0x08006768   0x00000110   Code   RO         3497    .text.Load_Config   filesystem.o
+    0x08006768   0x08006768   0x00000110   Code   RO         3499    .text.Load_Config   filesystem.o
     0x08006878   0x08006878   0x00000010   Code   RO         2283    .text.MCU_send      bsp_usart.o
     0x08006888   0x08006888   0x0000000c   Code   RO         3390    .text.MDMA_IRQHandler  stm32h7xx_it.o
     0x08006894   0x08006894   0x00000004   PAD
-    0x08006898   0x08006898   0x00000290   Code   RO         3472    .text.MPU6050_Gravity_Projection  sensing.o
+    0x08006898   0x08006898   0x00000290   Code   RO         3474    .text.MPU6050_Gravity_Projection  sensing.o
     0x08006b28   0x08006b28   0x00000070   Code   RO         2365    .text.MPU6050_Init  mpu6050.o
     0x08006b98   0x08006b98   0x00000058   Code   RO         2369    .text.MPU6050_Read_Accel  mpu6050.o
     0x08006bf0   0x08006bf0   0x00000040   Code   RO         3214    .text.MX_DMA_Init   dma.o
@@ -8955,7 +8958,7 @@ Memory Map of the image
     0x080070f2   0x080070f2   0x00000002   PAD
     0x080070f4   0x080070f4   0x000000f0   Code   RO         2331    .text.Mount_FatFs   bsp_file.o
     0x080071e4   0x080071e4   0x00000002   Code   RO         3362    .text.NMI_Handler   stm32h7xx_it.o
-    0x080071e6   0x080071e6   0x00000018   Code   RO         3499    .text.Node_FS_Init  filesystem.o
+    0x080071e6   0x080071e6   0x00000018   Code   RO         3501    .text.Node_FS_Init  filesystem.o
     0x080071fe   0x080071fe   0x00000002   PAD
     0x08007200   0x08007200   0x0000029c   Code   RO            2    .text.Node_Init     setup.o
     0x0800749c   0x0800749c   0x00000006   Code   RO            8    .text.OUTLINED_FUNCTION_0  setup.o
@@ -8977,9 +8980,9 @@ Memory Map of the image
     0x080075d6   0x080075d6   0x00000018   Code   RO         3310    .text.OUTLINED_FUNCTION_0  spi.o
     0x080075ee   0x080075ee   0x00000016   Code   RO         3343    .text.OUTLINED_FUNCTION_0  usart.o
     0x08007604   0x08007604   0x00000026   Code   RO         3433    .text.OUTLINED_FUNCTION_0  diagnosis.o
-    0x0800762a   0x0800762a   0x0000000e   Code   RO         3462    .text.OUTLINED_FUNCTION_0  recovery.o
-    0x08007638   0x08007638   0x0000000a   Code   RO         3482    .text.OUTLINED_FUNCTION_0  sensing.o
-    0x08007642   0x08007642   0x00000006   Code   RO         3503    .text.OUTLINED_FUNCTION_0  filesystem.o
+    0x0800762a   0x0800762a   0x0000000e   Code   RO         3464    .text.OUTLINED_FUNCTION_0  recovery.o
+    0x08007638   0x08007638   0x0000000a   Code   RO         3484    .text.OUTLINED_FUNCTION_0  sensing.o
+    0x08007642   0x08007642   0x00000006   Code   RO         3505    .text.OUTLINED_FUNCTION_0  filesystem.o
     0x08007648   0x08007648   0x00000008   Code   RO           10    .text.OUTLINED_FUNCTION_1  setup.o
     0x08007650   0x08007650   0x00000008   Code   RO          124    .text.OUTLINED_FUNCTION_1  stm32h7xx_hal_rcc.o
     0x08007658   0x08007658   0x0000000a   Code   RO          200    .text.OUTLINED_FUNCTION_1  stm32h7xx_hal_rcc_ex.o
@@ -9213,8 +9216,8 @@ Memory Map of the image
     0x080095b2   0x080095b2   0x00000002   PAD
     0x080095b4   0x080095b4   0x00000024   Code   RO           42    .text.__NVIC_SetPriority  stm32h7xx_hal_cortex.o
     0x080095d8   0x080095d8   0x00000064   Code   RO         2367    .text.adjust_accel_range  mpu6050.o
-    0x0800963c   0x0800963c   0x00000080   Code   RO         3514    .text.arm_mean_f32  arm_cortexM7lfdp_math.lib(arm_mean_f32.o)
-    0x080096bc   0x080096bc   0x000000e8   Code   RO         3524    .text.arm_std_f32   arm_cortexM7lfdp_math.lib(arm_std_f32.o)
+    0x0800963c   0x0800963c   0x00000080   Code   RO         3516    .text.arm_mean_f32  arm_cortexM7lfdp_math.lib(arm_mean_f32.o)
+    0x080096bc   0x080096bc   0x000000e8   Code   RO         3526    .text.arm_std_f32   arm_cortexM7lfdp_math.lib(arm_std_f32.o)
     0x080097a4   0x080097a4   0x0000014c   Code   RO         3413    .text.calculate_metrics  diagnosis.o
     0x080098f0   0x080098f0   0x0000006c   Code   RO         2663    .text.check_fs      ff.o
     0x0800995c   0x0800995c   0x00000004   PAD
@@ -9297,27 +9300,27 @@ Memory Map of the image
     0x0800cb44   0x0800cb44   0x0000004c   Code   RO         2645    .text.sync_window   ff.o
     0x0800cb90   0x0800cb90   0x00000078   Code   RO         3458    .text.trend_recovery  recovery.o
     0x0800cc08   0x0800cc08   0x00000030   Code   RO         2599    .text.validate      ff.o
-    0x0800cc38   0x0800cc38   0x00000020   Code   RO         3821    i.__0printf         mc_w.l(printfa.o)
-    0x0800cc58   0x0800cc58   0x00000028   Code   RO         3823    i.__0sprintf        mc_w.l(printfa.o)
-    0x0800cc80   0x0800cc80   0x00000008   Code   RO         3941    i.__aeabi_errno_addr  mc_w.l(errno.o)
-    0x0800cc88   0x0800cc88   0x00000066   Code   RO         3547    i.__hardfp_sqrt     m_wv.l(sqrt.o)
-    0x0800ccee   0x0800ccee   0x0000003a   Code   RO         3553    i.__hardfp_sqrtf    m_wv.l(sqrtf.o)
-    0x0800cd28   0x0800cd28   0x0000000e   Code   RO         4017    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x0800cd36   0x0800cd36   0x00000002   Code   RO         4018    i.__scatterload_null  mc_w.l(handlers.o)
-    0x0800cd38   0x0800cd38   0x0000000e   Code   RO         4019    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x0800cc38   0x0800cc38   0x00000020   Code   RO         3823    i.__0printf         mc_w.l(printfa.o)
+    0x0800cc58   0x0800cc58   0x00000028   Code   RO         3825    i.__0sprintf        mc_w.l(printfa.o)
+    0x0800cc80   0x0800cc80   0x00000008   Code   RO         3943    i.__aeabi_errno_addr  mc_w.l(errno.o)
+    0x0800cc88   0x0800cc88   0x00000066   Code   RO         3549    i.__hardfp_sqrt     m_wv.l(sqrt.o)
+    0x0800ccee   0x0800ccee   0x0000003a   Code   RO         3555    i.__hardfp_sqrtf    m_wv.l(sqrtf.o)
+    0x0800cd28   0x0800cd28   0x0000000e   Code   RO         4019    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x0800cd36   0x0800cd36   0x00000002   Code   RO         4020    i.__scatterload_null  mc_w.l(handlers.o)
+    0x0800cd38   0x0800cd38   0x0000000e   Code   RO         4021    i.__scatterload_zeroinit  mc_w.l(handlers.o)
     0x0800cd46   0x0800cd46   0x00000002   PAD
-    0x0800cd48   0x0800cd48   0x0000000c   Code   RO         3943    i.__set_errno       mc_w.l(errno.o)
-    0x0800cd54   0x0800cd54   0x00000184   Code   RO         3828    i._fp_digits        mc_w.l(printfa.o)
-    0x0800ced8   0x0800ced8   0x000006dc   Code   RO         3829    i._printf_core      mc_w.l(printfa.o)
-    0x0800d5b4   0x0800d5b4   0x00000024   Code   RO         3830    i._printf_post_padding  mc_w.l(printfa.o)
-    0x0800d5d8   0x0800d5d8   0x0000002e   Code   RO         3831    i._printf_pre_padding  mc_w.l(printfa.o)
-    0x0800d606   0x0800d606   0x0000000a   Code   RO         3833    i._sputc            mc_w.l(printfa.o)
-    0x0800d610   0x0800d610   0x00000050   Code   RO         3849    i.free              mc_w.l(malloc.o)
-    0x0800d660   0x0800d660   0x0000006c   Code   RO         3850    i.malloc            mc_w.l(malloc.o)
-    0x0800d6cc   0x0800d6cc   0x00000024   Code   RO         3562    i.puts              mc_w.l(puts.o)
-    0x0800d6f0   0x0800d6f0   0x00000081   Data   RO         3973    .constdata          mc_w.l(ctype_o.o)
+    0x0800cd48   0x0800cd48   0x0000000c   Code   RO         3945    i.__set_errno       mc_w.l(errno.o)
+    0x0800cd54   0x0800cd54   0x00000184   Code   RO         3830    i._fp_digits        mc_w.l(printfa.o)
+    0x0800ced8   0x0800ced8   0x000006dc   Code   RO         3831    i._printf_core      mc_w.l(printfa.o)
+    0x0800d5b4   0x0800d5b4   0x00000024   Code   RO         3832    i._printf_post_padding  mc_w.l(printfa.o)
+    0x0800d5d8   0x0800d5d8   0x0000002e   Code   RO         3833    i._printf_pre_padding  mc_w.l(printfa.o)
+    0x0800d606   0x0800d606   0x0000000a   Code   RO         3835    i._sputc            mc_w.l(printfa.o)
+    0x0800d610   0x0800d610   0x00000050   Code   RO         3851    i.free              mc_w.l(malloc.o)
+    0x0800d660   0x0800d660   0x0000006c   Code   RO         3852    i.malloc            mc_w.l(malloc.o)
+    0x0800d6cc   0x0800d6cc   0x00000024   Code   RO         3564    i.puts              mc_w.l(puts.o)
+    0x0800d6f0   0x0800d6f0   0x00000081   Data   RO         3975    .constdata          mc_w.l(ctype_o.o)
     0x0800d771   0x0800d771   0x00000003   PAD
-    0x0800d774   0x0800d774   0x00000004   Data   RO         3974    .constdata          mc_w.l(ctype_o.o)
+    0x0800d774   0x0800d774   0x00000004   Data   RO         3976    .constdata          mc_w.l(ctype_o.o)
     0x0800d778   0x0800d778   0x0000005c   Data   RO         3193    .rodata..L__const.main.sensor_data  main.o
     0x0800d7d4   0x0800d7d4   0x00000010   Data   RO         2241    .rodata.D1CorePrescTable  system_stm32h7xx.o
     0x0800d7e4   0x0800d7e4   0x00000080   Data   RO         2701    .rodata.ExCvt       ff.o
@@ -9331,12 +9334,12 @@ Memory Map of the image
     0x0800df48   0x0800df48   0x000000b5   Data   RO         2272    .rodata.str1.1      bsp_sdram.o
     0x0800dffd   0x0800dffd   0x00000185   Data   RO         2356    .rodata.str1.1      bsp_file.o
     0x0800e182   0x0800e182   0x000003aa   Data   RO         3447    .rodata.str1.1      diagnosis.o
-    0x0800e52c   0x0800e52c   0x0000008e   Data   RO         3486    .rodata.str1.1      sensing.o
-    0x0800e5ba   0x0800e5ba   0x0000012f   Data   RO         3505    .rodata.str1.1      filesystem.o
+    0x0800e52c   0x0800e52c   0x0000008e   Data   RO         3488    .rodata.str1.1      sensing.o
+    0x0800e5ba   0x0800e5ba   0x0000012f   Data   RO         3507    .rodata.str1.1      filesystem.o
     0x0800e6e9   0x0800e6e9   0x00000001   PAD
     0x0800e6ea   0x0800e6ea   0x0000001c   Data   RO         2699    .rodata.str2.2      ff.o
     0x0800e706   0x0800e706   0x000002ae   Data   RO         2737    .rodata.str2.2      ccsbcs.o
-    0x0800e9b4   0x0800e9b4   0x00000020   Data   RO         4016    Region$$Table       anon$$obj.o
+    0x0800e9b4   0x0800e9b4   0x00000020   Data   RO         4018    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x0800e9d4, Size: 0x00000000, Max: 0x00020000, ABSOLUTE)
@@ -9348,12 +9351,12 @@ Memory Map of the image
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x24000000   0x0800e9e0   0x00000004   Data   RW         3922    .data               mc_w.l(stdin.o)
-    0x24000004   0x0800e9e4   0x00000004   Data   RW         3923    .data               mc_w.l(stdout.o)
-    0x24000008   0x0800e9e8   0x00000004   Data   RW         3939    .data               mc_w.l(mvars.o)
-    0x2400000c   0x0800e9ec   0x00000004   Data   RW         3940    .data               mc_w.l(mvars.o)
-    0x24000010   0x0800e9f0   0x00000004   Data   RW         3944    .data               mc_w.l(errno.o)
-    0x24000014   0x0800e9f4   0x00000003   Data   RW         3968    .data               mc_w.l(fgetc_b.o)
+    0x24000000   0x0800e9e0   0x00000004   Data   RW         3924    .data               mc_w.l(stdin.o)
+    0x24000004   0x0800e9e4   0x00000004   Data   RW         3925    .data               mc_w.l(stdout.o)
+    0x24000008   0x0800e9e8   0x00000004   Data   RW         3941    .data               mc_w.l(mvars.o)
+    0x2400000c   0x0800e9ec   0x00000004   Data   RW         3942    .data               mc_w.l(mvars.o)
+    0x24000010   0x0800e9f0   0x00000004   Data   RW         3946    .data               mc_w.l(errno.o)
+    0x24000014   0x0800e9f4   0x00000003   Data   RW         3970    .data               mc_w.l(fgetc_b.o)
     0x24000017   0x0800e9f7   0x00000001   PAD
     0x24000018   0x0800e9f8   0x00000028   Data   RW           29    .data..L_MergedGlobals  setup.o
     0x24000040   0x0800ea20   0x00000008   Data   RW          766    .data..L_MergedGlobals  stm32h7xx_hal.o
@@ -9425,7 +9428,7 @@ Image component sizes
         72          8          0          0          0       1232   button.o
         50          4          0          0          0       1513   buzzer.o
        192         22        942          0          0       1763   ccsbcs.o
-      2586        832        938          0          0       8446   diagnosis.o
+      2586        832        938          0          0       8193   diagnosis.o
        148          4          0          0          0       2006   diskio.o
         64          4          0          0          0       5335   dma.o
         28          8          0          0       1129       1889   fatfs.o
@@ -9439,7 +9442,7 @@ Image component sizes
        840        176         92          0          0       7283   main.o
        128         12          0          0        108       7406   mdma.o
        382         52          0          1         88       8582   mpu6050.o
-       490         68          0          0          0       2673   recovery.o
+       490         68          0          0          0       3359   recovery.o
        188         20          0          0         36       6487   rtc.o
        804         32         20          1        520       7442   sd_diskio.o
        248         20          0          0        124       9809   sdmmc.o
@@ -9471,7 +9474,7 @@ Image component sizes
        718         56          0          0        684      12435   usart.o
 
     ----------------------------------------------------------------------
-     48124       5060       5364         96      22384     520733   Object Totals
+     48124       5060       5364         96      22384     521166   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         56         12          4          6         38          0   (incl. Padding)
 
@@ -9553,8 +9556,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     54360       5252       5500        120      22384     524764   Grand Totals
-     54360       5252       5500        120      22384     524764   ELF Image Totals
+     54360       5252       5500        120      22384     525197   Grand Totals
+     54360       5252       5500        120      22384     525197   ELF Image Totals
      54360       5252       5500        120          0          0   ROM Totals
 
 ==============================================================================
