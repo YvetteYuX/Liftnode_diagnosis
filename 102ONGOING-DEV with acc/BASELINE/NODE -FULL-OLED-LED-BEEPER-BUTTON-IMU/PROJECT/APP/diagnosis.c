@@ -195,21 +195,27 @@ char* check_trend(SensorData sensor_data, SensorMetrics metrics) {
     return "No trend detected";
 }
 
+// Function to check for outliers
+char* check_outlier(SensorData sensor_data, SensorMetrics metrics) {
+    // Check for outliers due to extreme low temperature
+    if (sensor_data.temperature[metrics.temperature_size - 1] <= -20.0) {
+        trend_recovery(sensor_data.acceleration, metrics.acceleration_size, WINDOW_SIZE);  // Apply trend recovery
+        outlier_recovery(sensor_data.acceleration, metrics.acceleration_size);  // Apply outlier recovery
+        return "Outlier due to extreme low temperature, recovery applied.";
+    }
 
-//char* check_trend(SensorData sensor_data, SensorMetrics metrics) {
-//    // Calculate percentage of change
-//    float temp_diff_percentage = ((metrics.max_temp - metrics.min_temp) / metrics.min_temp) * 100;
+    // Check for outliers due to sudden drop or spike in battery voltage
+    float current_voltage = sensor_data.battery_voltage[metrics.battery_size - 1];
+    float previous_voltage = sensor_data.battery_voltage[metrics.battery_size - 2]; // assuming size > 1
 
-//    // If the percentage is over 30%
-//    if (temp_diff_percentage > 30)
-//        return "Trend due to temperature variation";
+    // Check if there's a significant drop or spike in voltage (threshold set to 0.5V as an example)
+    if (fabs(current_voltage - previous_voltage) > 0.3) {
+        return "Outlier due to loose electrical contact (sudden voltage change).\nPlease fix loose contact!";
+    }
 
-//    // Check activate state of sensor
-//    if (metrics.max_accel - metrics.min_accel >= 5)
-//        return "Trend due to sensor activation";
+    return "No Outlier detected";
+}
 
-//    return "No Trend detected";
-//}
 
 // Function to get the actual threshold in terms of g's
 float get_threshold(AccelRange range) {
@@ -336,121 +342,26 @@ char* check_bias(SensorData sensor_data, SensorMetrics metrics) {
     if (max_derivative > derivative_threshold) {
         // Check the battery voltage at the point of the maximum derivative
         if (sensor_data.battery_voltage[max_derivative_index * WINDOW_SIZE] == 3.4) {
-            return "Bias detected due to low battery voltage.\nPlease charge the battery!";
-        }
-    }
-
-    // for (int i = 0; i < metrics.gyroscope_size; i++) {
-    //     if (fabs(sensor_data.gyroscope[i]) > GYRO_THRESHOLD) {
-    //         // Bias detected due to sudden rotation, now apply data recovery
-    //         int bias_index = max_derivative_index * WINDOW_SIZE;
-
-    //         // Split the data into two segments: before and after the bias
-    //         float* before_bias = &sensor_data.acceleration[0];
-    //         int before_size = bias_index;
-    //         float* after_bias = &sensor_data.acceleration[bias_index];
-    //         int after_size = metrics.acceleration_size - bias_index;
-
-    //         // Apply trend recovery separately on both segments
-    //         trend_recovery(before_bias, before_size, WINDOW_SIZE);
-    //         trend_recovery(after_bias, after_size, WINDOW_SIZE);
-
-    //         return "Bias detected due to sudden rotation and recovered!";
-    //     }
-    // }
-        // Check for bias due to sudden rotation using gyroscope data
-    for (int i = 0; i < metrics.gyroscope_size; i++) {
-        if (fabs(sensor_data.gyroscope[i]) > GYRO_THRESHOLD) {
             int bias_index = max_derivative_index * WINDOW_SIZE;
             correct_bias(sensor_data.acceleration, metrics.acceleration_size, smoothed_accel, bias_index, max_derivative_index, WINDOW_SIZE);
-            return "Bias detected due to sudden rotation and recovery applied";
+            return "Bias detected due to low battery voltage.\nPlease charge the battery!";
+        }
+				    // Check for bias due to sudden rotation using gyroscope data
+				for (int i = 0; i < metrics.gyroscope_size; i++) {
+					if (fabs(sensor_data.gyroscope[i]) > GYRO_THRESHOLD) {
+							int bias_index = max_derivative_index * WINDOW_SIZE;
+							correct_bias(sensor_data.acceleration, metrics.acceleration_size, smoothed_accel, bias_index, max_derivative_index, WINDOW_SIZE);
+							return "Bias detected due to sudden rotation and recovery applied";
+					}
+    
         }
     }
 
+    // No bias detected
     return "No bias detected";
 }
 
-//char* check_and_recover_bias(SensorData sensor_data, SensorMetrics metrics) {
-//    float derivative_threshold = 0.5;  // Define a threshold for the derivative
-//    int max_derivative_index = 0;
-//    float max_derivative = 0.0;
 
-//    // Apply a moving window average to smooth the acceleration data
-//    float smoothed_accel[metrics.acceleration_size / WINDOW_SIZE];
-//    int avg_index = 0;
-
-//    for (int i = 0; i <= metrics.acceleration_size - WINDOW_SIZE; i += WINDOW_SIZE) {
-//        float sum = 0.0;
-//        for (int j = 0; j < WINDOW_SIZE; j++) {
-//            sum += sensor_data.acceleration[i + j];
-//        }
-//        smoothed_accel[avg_index++] = sum / WINDOW_SIZE;
-//    }
-
-//    // Find the maximum numerical derivative of the smoothed data
-//    for (int i = 1; i < avg_index; i++) {
-//        float derivative = fabs(smoothed_accel[i] - smoothed_accel[i - 1]);
-//        if (derivative > max_derivative) {
-//            max_derivative = derivative;
-//            max_derivative_index = i;
-//        }
-//    }
-
-//    // Check if the maximum derivative exceeds the threshold
-//    if (max_derivative > derivative_threshold) {
-//        // Check the battery voltage at the point of the maximum derivative
-//        if (sensor_data.battery_voltage[max_derivative_index * WINDOW_SIZE] == 3.4) {
-//            return "Bias detected due to low battery voltage.\nPlease charge the battery!";
-//        }
-//    }
-
-//    for (int i = 0; i < metrics.gyroscope_size; i++) {
-//        if (fabs(sensor_data.gyroscope[i]) > GYRO_THRESHOLD) {
-//            // Bias detected due to sudden rotation, now apply data recovery
-//            int bias_index = max_derivative_index * WINDOW_SIZE;
-
-//            // Split the data into two segments: before and after the bias
-//            float* before_bias = &sensor_data.acceleration[0];
-//            int before_size = bias_index;
-//            float* after_bias = &sensor_data.acceleration[bias_index];
-//            int after_size = metrics.acceleration_size - bias_index;
-
-//            // Apply trend recovery separately on both segments
-//            trend_recovery(before_bias, before_size, WINDOW_SIZE);
-//            trend_recovery(after_bias, after_size, WINDOW_SIZE);
-
-//            return "Bias detected due to sudden rotation and recovered!";
-//        }
-//    }
-//    //     // Check for bias due to sudden rotation using gyroscope data
-//    // for (int i = 0; i < metrics.gyroscope_size; i++) {
-//    //     if (fabs(sensor_data.gyroscope[i]) > GYRO_THRESHOLD) {
-//    //         return "Bias detected due to sudden rotation";
-//    //     }
-//    // }
-
-//    return "No bias detected";
-//}
-// Function to check for outliers
-char* check_outlier(SensorData sensor_data, SensorMetrics metrics) {
-    // Check for outliers due to extreme low temperature
-    if (sensor_data.temperature[metrics.temperature_size - 1] <= -20.0) {
-        trend_recovery(sensor_data.acceleration, metrics.acceleration_size, WINDOW_SIZE);  // Apply trend recovery
-        outlier_recovery(sensor_data.acceleration, metrics.acceleration_size);  // Apply outlier recovery
-        return "Outlier due to extreme low temperature, recovery applied.";
-    }
-
-    // Check for outliers due to sudden drop or spike in battery voltage
-    float current_voltage = sensor_data.battery_voltage[metrics.battery_size - 1];
-    float previous_voltage = sensor_data.battery_voltage[metrics.battery_size - 2]; // assuming size > 1
-
-    // Check if there's a significant drop or spike in voltage (threshold set to 0.5V as an example)
-    if (fabs(current_voltage - previous_voltage) > 0.3) {
-        return "Outlier due to loose electrical contact (sudden voltage change).\nPlease fix loose contact!";
-    }
-
-    return "No Outlier detected";
-}
 
 
 char* check_missing(SensorData sensor_data, SensorMetrics metrics) {
@@ -487,21 +398,7 @@ char* check_missing(SensorData sensor_data, SensorMetrics metrics) {
 		return "Error: Unexpected condition";
 }
 
-//char* check_missing(SensorData sensor_data, SensorMetrics metrics) {
-//    // int missing_count = 0;
-//    // int threshold_missing_data = 5;  // Example threshold for missing data points
 
-//    // Calculate the expected number of data points
-//    int expected_data_points = sensor_data.sampling_frequency * sensor_data.duration;
-
-//    // Check if the actual data size is less than expected
-//    if (metrics.acceleration_size < expected_data_points) {
-//        return "Missing data detected due to insufficient sample points";
-//    }
-//    return "No missing data detected";
-//	}
-
-// Select the data type
 void diagnose(SensorData sensor_data, SensorMetrics metrics, int choice) {
     switch (choice) {
         case 0:
@@ -530,139 +427,4 @@ void diagnose(SensorData sensor_data, SensorMetrics metrics, int choice) {
             break;
     }
 }
-
-//// Function to calculate the maximum value in an array
-//char* check_drift(SensorData sensor_data) {
-//    float max_voltage = sensor_data.battery_voltage[0];
-//    float min_voltage = sensor_data.battery_voltage[0];
-//    for (int i = 1; i < 5; i++) {
-//        if (sensor_data.battery_voltage[i] > max_voltage)
-//            max_voltage = sensor_data.battery_voltage[i];
-//        if (sensor_data.battery_voltage[i] < min_voltage)
-//            min_voltage = sensor_data.battery_voltage[i];
-//    }
-//    if (max_voltage - min_voltage > 0.5) 
-//        return "Drift due to battery voltage variation";
-//    return "No Drift detected";
-//}
-
-//char* check_trend(SensorData sensor_data) {
-//    float max_temp = sensor_data.temperature[0];
-//    float min_temp = sensor_data.temperature[0];
-//    for (int i = 1; i < 5; i++) {
-//        if (sensor_data.temperature[i] > max_temp)
-//            max_temp = sensor_data.temperature[i];
-//        if (sensor_data.temperature[i] < min_temp)
-//            min_temp = sensor_data.temperature[i];
-//    }
-//    if (max_temp - min_temp > 10)
-//        return "Trend due to temperature variation";
-
-//    if (sensor_data.acceleration[0] - sensor_data.acceleration[4] >= 5)
-//        return "Trend due to sensor activation";
-
-//    return "No Trend detected";
-//}
-
-//char* check_minor(SensorData sensor_data) {
-//    float noise_tolerance = 0.1;
-//    for (int i = 0; i < 4; i++) {
-//        if (fabs(sensor_data.acceleration[i+1] - sensor_data.acceleration[i]) > noise_tolerance) 
-//            return "No Minor issues detected";
-//    }
-//    return "Minor issue detected due to low sensor resolution";
-//}
-
-//char* check_square(SensorData sensor_data) {
-//    float noise_tolerance = 0.1;
-//    float avg_acceleration = 0.0;
-//    for (int i = 0; i < 5; i++) {
-//        avg_acceleration += sensor_data.acceleration[i];
-//    }
-//    avg_acceleration /= 5;
-
-//    for (int i = 1; i < 5; i++) {
-//        if (fabs(sensor_data.acceleration[i] - sensor_data.acceleration[i-1]) > noise_tolerance || 
-//            fabs(sensor_data.acceleration[i] - avg_acceleration) > noise_tolerance) {
-//            return "No Square issues detected";
-//        }
-//    }
-
-//    if (avg_acceleration >= 6.0)
-//        return "Square issue detected due to sensor saturation";
-//    
-//    return "No Square issues detected";
-//}
-
-//char* check_bias(SensorData sensor_data) {
-//    float noise_tolerance = 0.1;
-//    float avg_acceleration = 0.0;
-//    for (int i = 0; i < 5; i++) {
-//        avg_acceleration += sensor_data.acceleration[i];
-//    }
-//    avg_acceleration /= 5;
-
-//    for (int i = 1; i < 5; i++) {
-//        if (fabs(sensor_data.acceleration[i] - avg_acceleration) > noise_tolerance * 5) 
-//            return "Bias detected due to sensor offset";
-//    }
-//    return "No Bias detected";
-//}
-
-//char* check_sudden_rotation(SensorData sensor_data) {
-//    for (int i = 1; i < 4; i++) {
-//        if (fabs(sensor_data.acceleration[i+1] - sensor_data.acceleration[i]) > 2.0)
-//            return "Sudden rotation detected";
-//    }
-//    return "No Sudden rotation detected";
-//}
-
-//char* check_outlier(SensorData sensor_data) {
-//    if (sensor_data.battery_voltage[4] < 3.2)
-//        return "Outlier due to sudden low battery voltage";
-
-//    return "No Outlier detected";
-//}
-
-//char* check_missing(SensorData sensor_data) {
-//    if (sensor_data.previous_data[0] != 'c')
-//        return "Missing data due to sensor saturation";
-
-//    if (sensor_data.battery_voltage[4] < 3.3)
-//        return "Missing data due to low battery voltage";
-
-//    if (sensor_data.temperature[4] > 50 || sensor_data.temperature[4] < -10)
-//        return "Missing data due to extreme temperature";
-
-//    return "Missing data due to hardware/software issue";
-//}
-
-//void diagnose(SensorData sensor_data, int choice) {
-//    switch (choice) {
-//        case 0:
-//            printf("Normal: No diagnostics needed.\n");
-//            break;
-//        case 1:
-//            printf("Missing: %s\n", check_missing(sensor_data));
-//            break;
-//        case 2:
-//            printf("Minor: %s\n", check_minor(sensor_data));
-//            break;
-//        case 3:
-//            printf("Outlier: %s\n", check_outlier(sensor_data));  
-//            break;
-//        case 4:
-//            printf("Square: %s\n", check_square(sensor_data));
-//            break;
-//        case 5:
-//            printf("Trend: %s\n", check_trend(sensor_data));
-//            break;
-//        case 6:
-//            printf("Drift: %s\n", check_drift(sensor_data));
-//            break;
-//        default:
-//            printf("Invalid choice.\n");
-//            break;
-//    }
-//}
 

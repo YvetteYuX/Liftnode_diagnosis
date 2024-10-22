@@ -94,7 +94,12 @@ Data_Structure LiftNode_Data = {
     .dt = 0,
     .ch01_data = NULL,
     .ch02_data = NULL,
-    .ch03_data = NULL};
+    .ch03_data = NULL,
+	  .ch04_data = NULL,
+    .ch05_data = NULL,
+    .ch06_data = NULL,
+    .ch07_data = NULL,	
+};
 
 /* USER_INPUT*/
 int button_trigger = 0; // mostly used in button interrupt handling

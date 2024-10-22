@@ -101,6 +101,10 @@ typedef struct{
     float *ch01_data;
     float *ch02_data;
     float *ch03_data;
+	  float *ch04_data;
+    float *ch05_data;
+    float *ch06_data;
+	  float *ch07_data;
 }Data_Structure;
 
 extern Data_Structure LiftNode_Data;

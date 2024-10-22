@@ -372,6 +372,12 @@ int Record_Sensing(void)
     LiftNode_Data.ch01_data = (float *)memory_alloc(sampling_points * sizeof(float));
     LiftNode_Data.ch02_data = (float *)memory_alloc(sampling_points * sizeof(float));
     LiftNode_Data.ch03_data = (float *)memory_alloc(sampling_points * sizeof(float));
+		
+		LiftNode_Data.ch04_data = (float *)memory_alloc(sampling_points * sizeof(float));
+    LiftNode_Data.ch05_data = (float *)memory_alloc(sampling_points * sizeof(float));
+    LiftNode_Data.ch06_data = (float *)memory_alloc(sampling_points * sizeof(float));
+		LiftNode_Data.ch07_data = (float *)memory_alloc(sampling_points * sizeof(float));
+		
 
     // sensing with iterations
     printf("Sensing...\n\r");
@@ -381,16 +387,28 @@ int Record_Sensing(void)
     for (i = 0; i < sampling_points; i++)
     {
         // read the data
-        // MPU6050_Read_All(&hi2c2, &MPU6050);
-        MPU6050_Read_Accel(&hi2c2, &MPU6050);
+        MPU6050_Read_All(&hi2c2, &MPU6050);
+//        MPU6050_Read_Accel(&hi2c2, &MPU6050);
 
         // save the data to the memory
         LiftNode_Data.ch01_data[i] = MPU6050.Ax * IMU_Calibration_Instance.Acc_Scale;
         LiftNode_Data.ch02_data[i] = MPU6050.Ay * IMU_Calibration_Instance.Acc_Scale;
         LiftNode_Data.ch03_data[i] = MPU6050.Az * IMU_Calibration_Instance.Acc_Scale;
+			
+				LiftNode_Data.ch04_data[i] = MPU6050.Gx;
+				LiftNode_Data.ch05_data[i] = MPU6050.Gy;
+				LiftNode_Data.ch06_data[i] = MPU6050.Gz;
+			
+			  LiftNode_Data.ch07_data[i] = MPU6050.Temperature;
+			
+
 
         // print the data
-        printf("Ax: %12.8f, Ay: %12.8f, Az: %12.8f\n", LiftNode_Data.ch01_data[i], LiftNode_Data.ch02_data[i], LiftNode_Data.ch03_data[i]);
+//        printf("Ax: %12.8f, Ay: %12.8f, Az: %12.8f\n", LiftNode_Data.ch01_data[i], LiftNode_Data.ch02_data[i], LiftNode_Data.ch03_data[i]);
+			printf("Ax: %12.8f, Ay: %12.8f, Az: %12.8f, Gx: %12.8f, Gy: %12.8f, Gz: %12.8f, Temp: %12.8f\n",
+       LiftNode_Data.ch01_data[i], LiftNode_Data.ch02_data[i], LiftNode_Data.ch03_data[i],
+       LiftNode_Data.ch04_data[i], LiftNode_Data.ch05_data[i], LiftNode_Data.ch06_data[i],
+       LiftNode_Data.ch07_data[i]);
 
         if (i % sampling_rate == 0)
         {
@@ -422,9 +440,18 @@ int Record_Sensing(void)
     Update_Record_Num();
 
     // free the memory
-    memory_free(LiftNode_Data.ch01_data);
-    memory_free(LiftNode_Data.ch02_data);
-    memory_free(LiftNode_Data.ch03_data);
+//    memory_free(LiftNode_Data.ch01_data);
+//    memory_free(LiftNode_Data.ch02_data);
+//    memory_free(LiftNode_Data.ch03_data);
+		
+		memory_free(LiftNode_Data.ch01_data);
+		memory_free(LiftNode_Data.ch02_data);
+		memory_free(LiftNode_Data.ch03_data);
+		memory_free(LiftNode_Data.ch04_data);
+		memory_free(LiftNode_Data.ch05_data);
+		memory_free(LiftNode_Data.ch06_data);
+		memory_free(LiftNode_Data.ch07_data);
+
 
     button_trigger = 0;
 

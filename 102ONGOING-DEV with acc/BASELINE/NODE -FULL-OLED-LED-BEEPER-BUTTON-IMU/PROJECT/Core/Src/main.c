@@ -126,6 +126,12 @@ int main(void)
   Node_Init();
   // Record_Sensing();
   // LED_RGB(0,1,0);
+	for(int i = 0; i < 100; i++)
+  {
+    Record_Sensing();
+
+    HAL_Delay(5000);
+  }
 //	char ch;
 //  printf("Please input a character: \n\r");
 
@@ -135,44 +141,16 @@ int main(void)
 //  printf("The character you input is: %c\n\r", ch);
 	
 	// Sample sensor data
-	  SensorData sensor_data = {
-        {3.5, 3.4, 3.5, 3.4, 3.5},  // battery_voltage
-        {21, 21, 22, 23, 26},       // temperature
-        {-0.3, 0.3, -0.1, 0.2, -0.3},  // acceleration
-				{200, 200, 200, 200, 200},  // gyroscope
-        "variable",                  // previous_data
-				false
-		};
-    SensorMetrics metrics = calculate_metrics(sensor_data);
-    printf("%d\n", metrics.acceleration_size);
-
-    int choice;
-    printf("Please select the fault type:\n");
-    printf("0: Normal\n");
-    printf("1: Missing\n");
-    printf("2: Minor\n");
-    printf("3: Outlier\n");
-    printf("4: Square\n");
-    printf("5: Trend\n");
-    printf("6: Drift\n");
-    printf("Enter your choice: ");
-    scanf("%d", &choice);
-
-    diagnose(sensor_data, metrics, choice);
-		
-		
-//    SensorData sensor_data;
-//    // sensor_data.size = 5; // Example size
-//    sensor_data.sampling_frequency = 1;  // Example frequency: 1 Hz (1 sample per second)
-//    sensor_data.duration = 5;  // Example duration: 10 seconds
-//    
-
-//    // Input sensor data
-//    sensor_data.battery_voltage = (float[]) {3.75, 3.50, 3.50, 3.85, 3.50};
-//    sensor_data.temperature = (float[]) {22.5, 23.0, 21.5, 24.0, 22.0};
-//    sensor_data.acceleration = (float[]) {0.0, 4.0, 4.0, 4.0};
-//		
-//		printf("%d\n", current_accel_range);
+//	  SensorData sensor_data = {
+//        {3.5, 3.4, 3.5, 3.4, 3.5},  // battery_voltage
+//        {21, 21, 22, 23, 26},       // temperature
+//        {-0.3, 0.3, -0.1, 0.2, -0.3},  // acceleration
+//				{200, 200, 200, 200, 200},  // gyroscope
+//        "variable",                  // previous_data
+//				false
+//		};
+//    SensorMetrics metrics = calculate_metrics(sensor_data);
+//    printf("%d\n", metrics.acceleration_size);
 
 //    int choice;
 //    printf("Please select the fault type:\n");
@@ -185,6 +163,9 @@ int main(void)
 //    printf("6: Drift\n");
 //    printf("Enter your choice: ");
 //    scanf("%d", &choice);
+
+//    diagnose(sensor_data, metrics, choice);
+//		
 //		
 //		SensorMetrics metrics; // state metrics
 
@@ -204,17 +185,25 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//		MPU6050_t MPU6050;
+		MPU6050_Read_All(&hi2c2, &MPU6050);
+
+
+		printf("Ax: %f, Ay: %f, Az: %f\n", MPU6050.Ax, MPU6050.Ay, MPU6050.Az);
+		printf("Gx: %f, Gy: %f, Gz: %f\n", MPU6050.Gx, MPU6050.Gy, MPU6050.Gz);
+		printf("Temperature: %f\n", MPU6050.Temperature);
+
     // MPU6050_Read_Show(&IMU_Calibration_Instance);
     // Triggering_Check(&LiftNode_TM);
     // HAL_Delay(10);
-    if(button_trigger == 1)
-    {
-      printf("Button Triggered!\n");
-      // LED_RGB(0,0,1);
-      Record_Sensing();
-      // LED_RGB(0,0,0);
-      printf("Triggering Processed!\n");
-    }
+//    if(button_trigger == 1)
+//    {
+//      printf("Button Triggered!\n");
+//      // LED_RGB(0,0,1);
+//      Record_Sensing();
+//      // LED_RGB(0,0,0);
+//      printf("Triggering Processed!\n");
+//    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

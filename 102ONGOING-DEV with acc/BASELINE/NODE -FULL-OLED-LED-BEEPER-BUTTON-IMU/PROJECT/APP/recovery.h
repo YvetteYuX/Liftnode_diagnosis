@@ -51,8 +51,9 @@
  void trend_recovery(float* data, int size, int window_size);
  void outlier_recovery(float* data, int size);
  void correct_bias(float* acceleration, int acceleration_size, float* smoothed_accel, int bias_index, int max_derivative_index, int window_size);
- int find_bias_point(float* data, int size, int window_size);
- void process_segment(float* data, int size);
+ 
+// int find_bias_point(float* data, int size, int window_size);
+// void process_segment(float* data, int size);
 
 #endif /* APP_CONTROL_H */
 
