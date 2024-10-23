@@ -142,8 +142,8 @@ int main(void)
 	
 	// Sample sensor data
 //	  SensorData sensor_data = {
-//        {3.5, 3.4, 3.5, 3.4, 3.5},  // battery_voltage
-//        {21, 21, 22, 23, 26},       // temperature
+//        {3.5, 3.3, 3.5, 3.4, 3.5},  // battery_voltage
+//        {20, 21, 22, 23, 26},       // temperature
 //        {-0.3, 0.3, -0.1, 0.2, -0.3},  // acceleration
 //				{200, 200, 200, 200, 200},  // gyroscope
 //        "variable",                  // previous_data
@@ -165,11 +165,11 @@ int main(void)
 //    scanf("%d", &choice);
 
 //    diagnose(sensor_data, metrics, choice);
-//		
-//		
+		
+		
 //		SensorMetrics metrics; // state metrics
 
-//    // Run the diagnostic function
+    // Run the diagnostic function
 //    diagnose(sensor_data, metrics, choice);
 
     // // Free allocated memory
